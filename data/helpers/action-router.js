@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
       res.status(200).json(actions);
     })
     .catch(error => {
-      res.status(500).json({ error: "Error retrieving actions" });
+      res.status(500).json({ errorMessage: "Error retrieving actions" });
     });
 });
 
@@ -26,7 +26,7 @@ router.get("/:id", (req, res) => {
     .then(actions => {
       res.status(200).json(actions);
     })
-    .catch(err => {
+    .catch(error => {
       res
         .status(500)
         .json({ errorMessage: "There was an error getting action" });
@@ -50,32 +50,32 @@ router.post("/", (req, res) => {
 
 //PUT
 router.put("/:id", (req, res) => {
-    actionModel
-      .update(req.params.id, req.body)
-      .then(updating => {
-        if (updating) {
-          res.status(200).json(updating);
-        } else {
-          res.status(404).json({ errorMessage: "Cannot find id" });
-        }
-      })
-      .catch(err => {
-        res.status(500).json({ errorMessage: "ERROR, YOU ARE DOOMED" });
-      });
-  });
+  actionModel
+    .update(req.params.id, req.body)
+    .then(updating => {
+      if (updating) {
+        res.status(200).json(updating);
+      } else {
+        res.status(404).json({ errorMessage: "Cannot find id" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ errorMessage: "ERROR, YOU ARE DOOMED" });
+    });
+});
 
-  //DELETE
-  router.delete("/:id", (req, res) => {
-    actionModel
-      .remove(req.params.id)
-      .then(deleting => {
-        res.status(200).json(deleting);
-      })
-      .catch(err => {
-        res.status(500).json({ errorMessage: "Object is untraceable!, define more please." });
-      });
-  });
-
-
+//DELETE
+router.delete("/:id", (req, res) => {
+  actionModel
+    .remove(req.params.id)
+    .then(deleting => {
+      res.status(200).json(deleting);
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ errorMessage: "Object is untraceable!, define more please." });
+    });
+});
 
 module.exports = router;

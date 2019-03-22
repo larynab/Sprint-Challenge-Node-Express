@@ -2,7 +2,6 @@
 const express = require("express");
 //Databases
 const actionModel = require("./actionModel.js");
-const projectModel = require("./projectModel.js");
 
 const router = express.Router();
 
@@ -18,6 +17,7 @@ router.get("/", (req, res) => {
       res.status(500).json({ error: "Error retrieving actions" });
     });
 });
+
 //GET BY ID
 router.get("/:id", (req, res) => {
   const { id } = req.params;
@@ -48,45 +48,34 @@ router.post("/", (req, res) => {
   }
 });
 
-//PROJECTS CRUD
-//GET
-router.get("/", (req, res) => {
-  projectModel
-    .get()
-    .then(projects => {
-      res.status(200).json(projects);
-    })
-    .catch(error => {
-      res.status(500).json({ error: "Error retrieving projects" });
-    });
-});
-//GET BY ID
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  projectModel
-    .get(id)
-    .then(projects => {
-      res.status(200).json(projects);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ errorMessage: "There was an error getting project" });
-    });
-});
-//POST
-router.post("/", (req, res) => {
-  let newProject = req.body;
+//PUT
+router.put("/:id", (req, res) => {
+    actionModel
+      .update(req.params.id, req.body)
+      .then(updating => {
+        if (updating) {
+          res.status(200).json(updating);
+        } else {
+          res.status(404).json({ errorMessage: "Cannot find id" });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ errorMessage: "ERROR, YOU ARE DOOMED" });
+      });
+  });
 
-  if (!newProject.description && !newProject.name) {
-    res
-      .status(400)
-      .json({ errorMessage: "Need description and notes!!!!!!!!" });
-  } else {
-    projectModel.insert(newProject).then(post => {
-      res.status(201).json(post.id);
-    });
-  }
-});
+  //DELETE
+  router.delete("/:id", (req, res) => {
+    actionModel
+      .remove(req.params.id)
+      .then(deleting => {
+        res.status(200).json(deleting);
+      })
+      .catch(err => {
+        res.status(500).json({ errorMessage: "Object is untraceable!, define more please." });
+      });
+  });
+
+
 
 module.exports = router;

@@ -1,14 +1,16 @@
 // importing a CommonJS module
 const express = require('express'); 
 
-const baseRouter = require('./data/helpers/base-router.js');
+const actionRouter = require('./data/helpers/action-router.js');
+const projectRouter= require('./data/helpers/project-router.js');
 
 const server = express();
 //Middleware
 server.use(express.json());
 //Routing
-server.use('/api/actions', baseRouter);
-server.use('/api/projects', baseRouter);
+server.use('/api/actions', actionRouter);
+server.use('/api/projects', projectRouter);
+// server.use('/api/projects', baseRouter);
 //Display Page
 server.get('/', (req, res) => {
     res.send(`
